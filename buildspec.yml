@@ -2,17 +2,16 @@ version: 0.2
 
 env:
   variables:
-    JAVA_HOME: "/usr/lib/jvm/java-11-openjdk-amd64"
     MAVEN_HOME: "/usr/share/maven"
-    PATH: "$PATH:$MAVEN_HOME/bin:$JAVA_HOME/bin"
+    PATH: "$PATH:$MAVEN_HOME/bin"
     WEATHER_API_KEY: "14bbc7727da84b768a690118250603"
 
 phases:
   install:
     runtime-versions:
-      java: openjdk11
+      java: corretto11
     commands:
-      - echo Installing Maven dependencies 
+      - echo Installing Maven dependencies...
       - java -version
       - mvn -version
       - mvn clean install
