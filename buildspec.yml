@@ -2,27 +2,35 @@ version: 0.2
 
 env:
   variables:
-    JAVA_HOME: "/usr/lib/jvm/java-11-amazon-corretto"
+    JAVA_HOME: "/usr/lib/jvm/java-11-openjdk-amd64"
     MAVEN_HOME: "/usr/share/maven"
     PATH: "$PATH:$MAVEN_HOME/bin"
+    WEATHER_API_KEY: "14bbc7727da84b768a690118250603"
 
 phases:
+  install:
+    runtime-versions:
+      java: corretto11
+    commands:
+      - echo Installing Maven dependencies...
+      - mvn clean install
+
   pre_build:
     commands:
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo Pre-build phase started on `date`
+      - mvn test
 
   build:
     commands:
-      - echo Build started on `date`
-      - mvn clean package
-      - mvn validate
-      - mvn compile
-      - mvn package
+      - echo Build phase started on `date`
+      - mvn package spring-boot:repackage
+      - echo Build completed on `date`
 
   post_build:
     commands:
-      - echo Build completed on `date`
-      - mv target/*.jar app.jar
+      - echo Post-build phase started on `date`
+      - mv target/weather-service-1.0-SNAPSHOT.jar app.jar
+      - chmod +x scripts/*.sh
       - printf '[{"name":"app.jar","sourceUrl":"app.jar"}]' > filemap.json
 
 artifacts:
@@ -35,4 +43,4 @@ artifacts:
 
 cache:
   paths:
-    - '/root/.m2/**/*' 
+    - '/root/.m2/**/*'
