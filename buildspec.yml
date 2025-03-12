@@ -1,0 +1,38 @@
+version: 0.2
+
+env:
+  variables:
+    JAVA_HOME: "/usr/lib/jvm/java-11-amazon-corretto"
+    MAVEN_HOME: "/usr/share/maven"
+    PATH: "$PATH:$MAVEN_HOME/bin"
+
+phases:
+  pre_build:
+    commands:
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - mvn clean package
+      - mvn validate
+      - mvn compile
+      - mvn package
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - mv target/*.jar app.jar
+      - printf '[{"name":"app.jar","sourceUrl":"app.jar"}]' > filemap.json
+
+artifacts:
+  files:
+    - app.jar
+    - appspec.yml
+    - scripts/**/*
+    - filemap.json
+  discard-paths: no
+
+cache:
+  paths:
+    - '/root/.m2/**/*' 
