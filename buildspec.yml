@@ -12,7 +12,7 @@ phases:
     runtime-versions:
       java: openjdk11
     commands:
-      - echo Installing Maven dependencies 
+      - echo Installing Maven dependencies...
       - java -version
       - mvn -version
       - mvn clean install
