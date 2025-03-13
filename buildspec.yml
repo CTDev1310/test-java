@@ -2,31 +2,17 @@ version: 0.2
 
 env:
   variables:
-    MAVEN_HOME: "/usr/share/maven"
-    PATH: "$PATH:$MAVEN_HOME/bin"
     WEATHER_API_KEY: "14bbc7727da84b768a690118250603"
-    JAVA_HOME: "/usr/lib/jvm/java-11-amazon-corretto"
 
 phases:
   install:
     runtime-versions:
       java: corretto11
     commands:
-      - echo Installing JDK 11 and Maven...
-      # Install JDK 11
-      - yum update -y
-      - yum install -y java-11-amazon-corretto-devel
-      # Install Maven
+      - echo Installing Maven...
       - yum install -y maven
-      # Verify installations
       - java -version
       - mvn -version
-      # Set environment variables
-      - export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
-      - export PATH=$PATH:$JAVA_HOME/bin
-      - echo "JAVA_HOME=$JAVA_HOME" >> ~/.bashrc
-      - echo "PATH=$PATH" >> ~/.bashrc
-      - source ~/.bashrc
 
   pre_build:
     commands:
@@ -36,7 +22,7 @@ phases:
   build:
     commands:
       - echo Build phase started on `date`
-      - mvn clean package spring-boot:repackage
+      - mvn package spring-boot:repackage
       - echo Build completed on `date`
 
   post_build:
