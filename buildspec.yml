@@ -5,6 +5,7 @@ env:
     MAVEN_HOME: "/usr/share/maven"
     PATH: "$PATH:$MAVEN_HOME/bin"
     WEATHER_API_KEY: "14bbc7727da84b768a690118250603"
+  parameter-store:
     JAVA_HOME: "/usr/lib/jvm/java-11-amazon-corretto"
 
 phases:
@@ -14,6 +15,8 @@ phases:
     commands:
       - echo Installing dependencies...
       - yum install -y java-11-amazon-corretto-devel maven
+      - export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
+      - export PATH=$PATH:$JAVA_HOME/bin
       - java -version
       - mvn -version
 
