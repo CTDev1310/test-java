@@ -11,10 +11,10 @@ phases:
     runtime-versions:
       java: corretto11
     commands:
-      - echo Installing Maven...
-      - yum install -y maven
+      - echo Installing Maven dependencies...
       - java -version
       - mvn -version
+      - mvn clean install
 
   pre_build:
     commands:
